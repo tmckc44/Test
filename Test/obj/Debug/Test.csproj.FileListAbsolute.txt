@@ -89,3 +89,7 @@ C:\IIS\Test\Test\obj\Debug\Test.csproj.CoreCompileInputs.cache
 C:\IIS\Test\Test\obj\Debug\Test.csproj.CopyComplete
 C:\IIS\Test\Test\obj\Debug\Test.dll
 C:\IIS\Test\Test\obj\Debug\Test.pdb
+C:\IIS\Test\Test\bin\EntityFramework.dll
+C:\IIS\Test\Test\bin\EntityFramework.SqlServer.dll
+C:\IIS\Test\Test\bin\EntityFramework.xml
+C:\IIS\Test\Test\bin\EntityFramework.SqlServer.xml
