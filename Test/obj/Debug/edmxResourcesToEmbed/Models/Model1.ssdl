@@ -1,14 +1,65 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="TestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-  <!--Errors Found During Generation:
-warning 6013: The table/view 'Test.dbo.Customer' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="Customer">
-          <Property Name="Firstname" Type="nvarchar" MaxLength="25" />
-          <Property Name="Lastname" Type="nvarchar" MaxLength="25" />
-          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="15" />
-          <Property Name="EmailAddress" Type="nvarchar" MaxLength="25" />
-          <Property Name="CreateDate" Type="datetime" />
-        </EntityType>-->
+<Schema Namespace="TestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Firstname" Type="nvarchar" MaxLength="25" />
+    <Property Name="Lastname" Type="nvarchar" MaxLength="25" />
+    <Property Name="PhoneNumber" Type="nvarchar" MaxLength="15" />
+    <Property Name="EmailAddress" Type="nvarchar" MaxLength="25" />
+    <Property Name="CreateDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="IXF_ACCOUNT">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="AccountNumber" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="IXF_TRANSACTION">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Transaction_DATETIME" Type="datetime" />
+    <Property Name="TRANSACTION_TYPE_FK" Type="int" />
+    <Property Name="Amount" Type="int" />
+    <Property Name="AccountNumber" Type="int" />
+  </EntityType>
+  <EntityType Name="IXF_TRANSACTION_TYPE">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="Code" Type="nvarchar" MaxLength="50" />
+    <Property Name="Description" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <Association Name="FK_IXF_TRANSACTION_IXF_ACCOUNT">
+    <End Role="IXF_ACCOUNT" Type="Self.IXF_ACCOUNT" Multiplicity="0..1" />
+    <End Role="IXF_TRANSACTION" Type="Self.IXF_TRANSACTION" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="IXF_ACCOUNT">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="IXF_TRANSACTION">
+        <PropertyRef Name="TRANSACTION_TYPE_FK" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT">
+    <End Role="IXF_ACCOUNT" Type="Self.IXF_ACCOUNT" Multiplicity="1" />
+    <End Role="IXF_TRANSACTION_TYPE" Type="Self.IXF_TRANSACTION_TYPE" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="IXF_ACCOUNT">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="IXF_TRANSACTION_TYPE">
+        <PropertyRef Name="ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Function Name="InsertCustomer" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="Firstname" Type="varchar" Mode="In" />
     <Parameter Name="Lastname" Type="varchar" Mode="In" />
@@ -16,5 +67,18 @@ warning 6013: The table/view 'Test.dbo.Customer' does not have a primary key def
     <Parameter Name="EmailAddress" Type="varchar" Mode="In" />
     <Parameter Name="CreatedDate" Type="datetime" Mode="In" />
   </Function>
-  <EntityContainer Name="TestModelStoreContainer" />
+  <EntityContainer Name="TestModelStoreContainer">
+    <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="IXF_ACCOUNT" EntityType="Self.IXF_ACCOUNT" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="IXF_TRANSACTION" EntityType="Self.IXF_TRANSACTION" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="IXF_TRANSACTION_TYPE" EntityType="Self.IXF_TRANSACTION_TYPE" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_IXF_TRANSACTION_IXF_ACCOUNT" Association="Self.FK_IXF_TRANSACTION_IXF_ACCOUNT">
+      <End Role="IXF_ACCOUNT" EntitySet="IXF_ACCOUNT" />
+      <End Role="IXF_TRANSACTION" EntitySet="IXF_TRANSACTION" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT" Association="Self.FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT">
+      <End Role="IXF_ACCOUNT" EntitySet="IXF_ACCOUNT" />
+      <End Role="IXF_TRANSACTION_TYPE" EntitySet="IXF_TRANSACTION_TYPE" />
+    </AssociationSet>
+  </EntityContainer>
 </Schema>

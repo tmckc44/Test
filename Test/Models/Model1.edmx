@@ -4,16 +4,67 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="TestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'Test.dbo.Customer' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+    <Schema Namespace="TestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Firstname" Type="nvarchar" MaxLength="25" />
           <Property Name="Lastname" Type="nvarchar" MaxLength="25" />
           <Property Name="PhoneNumber" Type="nvarchar" MaxLength="15" />
           <Property Name="EmailAddress" Type="nvarchar" MaxLength="25" />
           <Property Name="CreateDate" Type="datetime" />
-        </EntityType>-->
+        </EntityType>
+        <EntityType Name="IXF_ACCOUNT">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="AccountNumber" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="IXF_TRANSACTION">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Transaction_DATETIME" Type="datetime" />
+          <Property Name="TRANSACTION_TYPE_FK" Type="int" />
+          <Property Name="Amount" Type="int" />
+          <Property Name="AccountNumber" Type="int" />
+        </EntityType>
+        <EntityType Name="IXF_TRANSACTION_TYPE">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_IXF_TRANSACTION_IXF_ACCOUNT">
+          <End Role="IXF_ACCOUNT" Type="Self.IXF_ACCOUNT" Multiplicity="0..1" />
+          <End Role="IXF_TRANSACTION" Type="Self.IXF_TRANSACTION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IXF_ACCOUNT">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="IXF_TRANSACTION">
+              <PropertyRef Name="TRANSACTION_TYPE_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT">
+          <End Role="IXF_ACCOUNT" Type="Self.IXF_ACCOUNT" Multiplicity="1" />
+          <End Role="IXF_TRANSACTION_TYPE" Type="Self.IXF_TRANSACTION_TYPE" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="IXF_ACCOUNT">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="IXF_TRANSACTION_TYPE">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="InsertCustomer" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Firstname" Type="varchar" Mode="In" />
           <Parameter Name="Lastname" Type="varchar" Mode="In" />
@@ -21,7 +72,20 @@ warning 6013: The table/view 'Test.dbo.Customer' does not have a primary key def
           <Parameter Name="EmailAddress" Type="varchar" Mode="In" />
           <Parameter Name="CreatedDate" Type="datetime" Mode="In" />
         </Function>
-        <EntityContainer Name="TestModelStoreContainer" />
+        <EntityContainer Name="TestModelStoreContainer">
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IXF_ACCOUNT" EntityType="Self.IXF_ACCOUNT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IXF_TRANSACTION" EntityType="Self.IXF_TRANSACTION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IXF_TRANSACTION_TYPE" EntityType="Self.IXF_TRANSACTION_TYPE" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_IXF_TRANSACTION_IXF_ACCOUNT" Association="Self.FK_IXF_TRANSACTION_IXF_ACCOUNT">
+            <End Role="IXF_ACCOUNT" EntitySet="IXF_ACCOUNT" />
+            <End Role="IXF_TRANSACTION" EntitySet="IXF_TRANSACTION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT" Association="Self.FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT">
+            <End Role="IXF_ACCOUNT" EntitySet="IXF_ACCOUNT" />
+            <End Role="IXF_TRANSACTION_TYPE" EntitySet="IXF_TRANSACTION_TYPE" />
+          </AssociationSet>
+        </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -34,7 +98,83 @@ warning 6013: The table/view 'Test.dbo.Customer' does not have a primary key def
             <Parameter Name="EmailAddress" Mode="In" Type="String" />
             <Parameter Name="CreatedDate" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <EntitySet Name="Customers" EntityType="TestModel.Customer" />
+          <EntitySet Name="IXF_ACCOUNT" EntityType="TestModel.IXF_ACCOUNT" />
+          <EntitySet Name="IXF_TRANSACTION" EntityType="TestModel.IXF_TRANSACTION" />
+          <EntitySet Name="IXF_TRANSACTION_TYPE" EntityType="TestModel.IXF_TRANSACTION_TYPE" />
+          <AssociationSet Name="FK_IXF_TRANSACTION_IXF_ACCOUNT" Association="TestModel.FK_IXF_TRANSACTION_IXF_ACCOUNT">
+            <End Role="IXF_ACCOUNT" EntitySet="IXF_ACCOUNT" />
+            <End Role="IXF_TRANSACTION" EntitySet="IXF_TRANSACTION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT" Association="TestModel.FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT">
+            <End Role="IXF_ACCOUNT" EntitySet="IXF_ACCOUNT" />
+            <End Role="IXF_TRANSACTION_TYPE" EntitySet="IXF_TRANSACTION_TYPE" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Firstname" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Lastname" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="EmailAddress" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="IXF_ACCOUNT">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="AccountNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="IXF_TRANSACTION" Relationship="TestModel.FK_IXF_TRANSACTION_IXF_ACCOUNT" FromRole="IXF_ACCOUNT" ToRole="IXF_TRANSACTION" />
+          <NavigationProperty Name="IXF_TRANSACTION_TYPE" Relationship="TestModel.FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT" FromRole="IXF_ACCOUNT" ToRole="IXF_TRANSACTION_TYPE" />
+        </EntityType>
+        <EntityType Name="IXF_TRANSACTION">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Transaction_DATETIME" Type="DateTime" Precision="3" />
+          <Property Name="TRANSACTION_TYPE_FK" Type="Int32" />
+          <Property Name="Amount" Type="Int32" />
+          <Property Name="AccountNumber" Type="Int32" />
+          <NavigationProperty Name="IXF_ACCOUNT" Relationship="TestModel.FK_IXF_TRANSACTION_IXF_ACCOUNT" FromRole="IXF_TRANSACTION" ToRole="IXF_ACCOUNT" />
+        </EntityType>
+        <EntityType Name="IXF_TRANSACTION_TYPE">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="IXF_ACCOUNT" Relationship="TestModel.FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT" FromRole="IXF_TRANSACTION_TYPE" ToRole="IXF_ACCOUNT" />
+        </EntityType>
+        <Association Name="FK_IXF_TRANSACTION_IXF_ACCOUNT">
+          <End Type="TestModel.IXF_ACCOUNT" Role="IXF_ACCOUNT" Multiplicity="0..1" />
+          <End Type="TestModel.IXF_TRANSACTION" Role="IXF_TRANSACTION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IXF_ACCOUNT">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="IXF_TRANSACTION">
+              <PropertyRef Name="TRANSACTION_TYPE_FK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT">
+          <End Type="TestModel.IXF_ACCOUNT" Role="IXF_ACCOUNT" Multiplicity="1" />
+          <End Type="TestModel.IXF_TRANSACTION_TYPE" Role="IXF_TRANSACTION_TYPE" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="IXF_ACCOUNT">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="IXF_TRANSACTION_TYPE">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -42,6 +182,46 @@ warning 6013: The table/view 'Test.dbo.Customer' does not have a primary key def
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="TestModelStoreContainer" CdmEntityContainer="TestEntities" >
           <FunctionImportMapping FunctionImportName="InsertCustomer" FunctionName="TestModel.Store.InsertCustomer" />
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="TestModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="Lastname" ColumnName="Lastname" />
+                <ScalarProperty Name="Firstname" ColumnName="Firstname" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IXF_ACCOUNT">
+            <EntityTypeMapping TypeName="TestModel.IXF_ACCOUNT">
+              <MappingFragment StoreEntitySet="IXF_ACCOUNT">
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IXF_TRANSACTION">
+            <EntityTypeMapping TypeName="TestModel.IXF_TRANSACTION">
+              <MappingFragment StoreEntitySet="IXF_TRANSACTION">
+                <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="TRANSACTION_TYPE_FK" ColumnName="TRANSACTION_TYPE_FK" />
+                <ScalarProperty Name="Transaction_DATETIME" ColumnName="Transaction_DATETIME" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IXF_TRANSACTION_TYPE">
+            <EntityTypeMapping TypeName="TestModel.IXF_TRANSACTION_TYPE">
+              <MappingFragment StoreEntitySet="IXF_TRANSACTION_TYPE">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

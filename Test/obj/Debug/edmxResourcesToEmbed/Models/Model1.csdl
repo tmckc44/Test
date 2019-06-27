@@ -8,5 +8,81 @@
       <Parameter Name="EmailAddress" Mode="In" Type="String" />
       <Parameter Name="CreatedDate" Mode="In" Type="DateTime" />
     </FunctionImport>
+    <EntitySet Name="Customers" EntityType="TestModel.Customer" />
+    <EntitySet Name="IXF_ACCOUNT" EntityType="TestModel.IXF_ACCOUNT" />
+    <EntitySet Name="IXF_TRANSACTION" EntityType="TestModel.IXF_TRANSACTION" />
+    <EntitySet Name="IXF_TRANSACTION_TYPE" EntityType="TestModel.IXF_TRANSACTION_TYPE" />
+    <AssociationSet Name="FK_IXF_TRANSACTION_IXF_ACCOUNT" Association="TestModel.FK_IXF_TRANSACTION_IXF_ACCOUNT">
+      <End Role="IXF_ACCOUNT" EntitySet="IXF_ACCOUNT" />
+      <End Role="IXF_TRANSACTION" EntitySet="IXF_TRANSACTION" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT" Association="TestModel.FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT">
+      <End Role="IXF_ACCOUNT" EntitySet="IXF_ACCOUNT" />
+      <End Role="IXF_TRANSACTION_TYPE" EntitySet="IXF_TRANSACTION_TYPE" />
+    </AssociationSet>
   </EntityContainer>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Firstname" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+    <Property Name="Lastname" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="EmailAddress" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="IXF_ACCOUNT">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="AccountNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="IXF_TRANSACTION" Relationship="TestModel.FK_IXF_TRANSACTION_IXF_ACCOUNT" FromRole="IXF_ACCOUNT" ToRole="IXF_TRANSACTION" />
+    <NavigationProperty Name="IXF_TRANSACTION_TYPE" Relationship="TestModel.FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT" FromRole="IXF_ACCOUNT" ToRole="IXF_TRANSACTION_TYPE" />
+  </EntityType>
+  <EntityType Name="IXF_TRANSACTION">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Transaction_DATETIME" Type="DateTime" Precision="3" />
+    <Property Name="TRANSACTION_TYPE_FK" Type="Int32" />
+    <Property Name="Amount" Type="Int32" />
+    <Property Name="AccountNumber" Type="Int32" />
+    <NavigationProperty Name="IXF_ACCOUNT" Relationship="TestModel.FK_IXF_TRANSACTION_IXF_ACCOUNT" FromRole="IXF_TRANSACTION" ToRole="IXF_ACCOUNT" />
+  </EntityType>
+  <EntityType Name="IXF_TRANSACTION_TYPE">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="IXF_ACCOUNT" Relationship="TestModel.FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT" FromRole="IXF_TRANSACTION_TYPE" ToRole="IXF_ACCOUNT" />
+  </EntityType>
+  <Association Name="FK_IXF_TRANSACTION_IXF_ACCOUNT">
+    <End Type="TestModel.IXF_ACCOUNT" Role="IXF_ACCOUNT" Multiplicity="0..1" />
+    <End Type="TestModel.IXF_TRANSACTION" Role="IXF_TRANSACTION" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="IXF_ACCOUNT">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="IXF_TRANSACTION">
+        <PropertyRef Name="TRANSACTION_TYPE_FK" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT">
+    <End Type="TestModel.IXF_ACCOUNT" Role="IXF_ACCOUNT" Multiplicity="1" />
+    <End Type="TestModel.IXF_TRANSACTION_TYPE" Role="IXF_TRANSACTION_TYPE" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="IXF_ACCOUNT">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="IXF_TRANSACTION_TYPE">
+        <PropertyRef Name="ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

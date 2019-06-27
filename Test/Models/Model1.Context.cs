@@ -27,6 +27,10 @@ namespace Test.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<IXF_ACCOUNT> IXF_ACCOUNT { get; set; }
+        public virtual DbSet<IXF_TRANSACTION> IXF_TRANSACTION { get; set; }
+        public virtual DbSet<IXF_TRANSACTION_TYPE> IXF_TRANSACTION_TYPE { get; set; }
     
         public virtual int InsertCustomer(string firstname, string lastname, string phoneNumber, string emailAddress, Nullable<System.DateTime> createdDate)
         {

@@ -2,5 +2,45 @@
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="TestModelStoreContainer" CdmEntityContainer="TestEntities">
     <FunctionImportMapping FunctionImportName="InsertCustomer" FunctionName="TestModel.Store.InsertCustomer" />
+    <EntitySetMapping Name="Customers">
+      <EntityTypeMapping TypeName="TestModel.Customer">
+        <MappingFragment StoreEntitySet="Customer">
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="Lastname" ColumnName="Lastname" />
+          <ScalarProperty Name="Firstname" ColumnName="Firstname" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IXF_ACCOUNT">
+      <EntityTypeMapping TypeName="TestModel.IXF_ACCOUNT">
+        <MappingFragment StoreEntitySet="IXF_ACCOUNT">
+          <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IXF_TRANSACTION">
+      <EntityTypeMapping TypeName="TestModel.IXF_TRANSACTION">
+        <MappingFragment StoreEntitySet="IXF_TRANSACTION">
+          <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="TRANSACTION_TYPE_FK" ColumnName="TRANSACTION_TYPE_FK" />
+          <ScalarProperty Name="Transaction_DATETIME" ColumnName="Transaction_DATETIME" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IXF_TRANSACTION_TYPE">
+      <EntityTypeMapping TypeName="TestModel.IXF_TRANSACTION_TYPE">
+        <MappingFragment StoreEntitySet="IXF_TRANSACTION_TYPE">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

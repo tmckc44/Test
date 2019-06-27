@@ -4,7 +4,14 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="15284845123d4953af9505520faf11a5" Name="Diagram1" />
+      <Diagram DiagramId="15284845123d4953af9505520faf11a5" Name="Diagram1" >
+        <EntityTypeShape EntityType="TestModel.Customer" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TestModel.IXF_ACCOUNT" Width="1.5" PointX="3.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TestModel.IXF_TRANSACTION" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TestModel.IXF_TRANSACTION_TYPE" Width="1.5" PointX="2.75" PointY="3.75" />
+        <AssociationConnector Association="TestModel.FK_IXF_TRANSACTION_IXF_ACCOUNT" />
+        <AssociationConnector Association="TestModel.FK_IXF_TRANSACTION_TYPE_IXF_ACCOUNT" />
+      </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
